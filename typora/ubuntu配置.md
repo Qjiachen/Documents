@@ -274,14 +274,95 @@ sudo hwclock --localtime --systohc
 
 # openwrt配置
 
+
+
+```bash
+# Download and update the sources
+git clone https://github.com/openwrt/openwrt
+
+## 下载OpenClash
+wget https://github.com/vernesong/OpenClash/archive/master.zip
+
+## 解压
+unzip master.zip
+
+## 复制OpenClash软件包到OpenWrt
+cp -r OpenClash-master/luci-app-openclash openwrt/package
+cd openwrt
+
+# Select a specific code revision
+git branch -a
+git tag
+git checkout v22.03.5
+
+# Update the feeds
+./scripts/feeds update -a
+./scripts/feeds install -a
+
+# Configure the firmware image and the kernel
+make menuconfig
+
+## 选择系统(以 x86_64 为例)
+Target System -> x86
+Subtarget -> x86_64
+
+## 选择固件的文件系统
+## https://openwrt.org/docs/techref/filesystems
+Target Images -> squashfs
+
+## 选择构建X86_X64的GRUB固件
+Target Images -> Build GRUB images (Linux x86 or x86_64 host only) 
+
+## 选择更小的压缩格式固件，方便复制
+Target Images -> GZip images
+
+## 修改软件包可用空间，默认安装会占用100M左右，建议修改扩大，为后续安装其他软件打基础
+Target Images -> Root filesystem partition size
+
+## 添加web界面(y键选择n键排除)
+LuCI > Collections -> Luci
+
+## 添加兼容性依赖
+LuCI > Modules -> luci-compat
+
+## 添加中文
+LuCI > Modules -> Translations -> Chinese Simplified
+
+## 添加openclash
+LuCI > Applications -> luci-app-openclash  
+
+## 添加主题
+LuCI -> Themes
+
+## 添加wget
+Nerwork -> File Transfer -> wget-ssl
+
+## 添加kmod-tun，TUN模式必须
+Kernel modules -> Network Support -> kmod-tun
+
+## 排除dnsmasq，由于默认会安装dnsmasq-full，这里需要排除dnsmasq，否则会冲突报错。
+Base system -> dnsmasq 
+
+
+make clean
+
+make targetclean
+
+make dirclean
+
+make distclean
+```
+
+
+
 ```shell
 ./scripts/feeds update -a
 ./scripts/feeds install -a
 
 make menuconfig
 
-make download -j6 V=s
-make -j6 V=s
+make -j8 download V=s
+make -j8 V=s
 
 
 //重新配置
