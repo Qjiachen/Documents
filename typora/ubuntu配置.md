@@ -353,6 +353,14 @@ make dirclean
 make distclean
 ```
 
+```bash
+#用管道将编译日志传递给tee命令，最终写入到compile.log文件里
+make -jN V=s | tee ../compile.log
+
+cat ../compile.log | grep ERROR:
+cat ../compile.log | grep failed
+```
+
 
 
 ```shell
@@ -363,6 +371,9 @@ make menuconfig
 
 make -j8 download V=s
 make -j8 V=s
+
+##WARNING: Install qemu-img to create VDI/VMDK images
+sudo apt-get install qemu-utils
 
 
 //重新配置
