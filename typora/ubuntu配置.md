@@ -59,7 +59,7 @@ sudo apt-get install python3-setuptools
 在终端中运行下列指令来安装Typora：
 
 ```shell
-sudo apt-get update && sudo apt install typora
+sudo apt-get update && sudo snap install typora
 ```
 
 通过这样的方式安装后，就可以直接在终端运行` typora`，例如
